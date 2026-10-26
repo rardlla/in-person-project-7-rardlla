@@ -1,15 +1,19 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 
 // TODO: Create the ThemeContext using createContext()
-const ThemeContext = null; // Replace with createContext()
+const ThemeContext = createContext();
 
 // Custom hook for using theme
 export const useTheme = () => {
   // TODO: Get context using useContext
   // TODO: Add error handling if context is not found
   // Hint: throw new Error('useTheme must be used within ThemeProvider')
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error('useTheme must be used within ThemeProvider');
+  }
 
-  return {}; // TODO: Return the context
+  return context;
 };
 
 // Provider component
@@ -19,6 +23,9 @@ export const ThemeProvider = ({ children }) => {
   // const [theme, setTheme] = useState(() => {
   //   return localStorage.getItem('theme') || 'light';
   // });
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('theme') || 'light';
+  });
 
   // TODO: Create a useEffect to:
   // 1. Set data-theme on the <html> element: document.documentElement.setAttribute('data-theme', theme)
@@ -27,19 +34,31 @@ export const ThemeProvider = ({ children }) => {
   // useEffect(() => {
   //   // Your code here
   // }, [theme]);
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
   // TODO: Create toggleTheme function
   // const toggleTheme = () => {
   //   // Switch between 'light' and 'dark'
   // };
+  const toggleTheme = () => {
+    setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
+  };
+
 
   // TODO: Create the value object with theme and toggleTheme
   const value = {
-    // Add theme and toggleTheme here
+    theme,
+    toggleTheme
   };
+
 
   // TODO: Return the Provider with value and children
   return (
-    <div>{children}</div> // Replace with actual Provider
+    <ThemeContext.Provider value={value}>
+      {children}
+    </ThemeContext.Provider>
   );
 };

@@ -1,9 +1,11 @@
 import { useState } from 'react';
 // TODO: Import useTheme from context
+import { useTheme } from '../context/ThemeContext';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   // TODO: Get theme and toggleTheme from context
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <nav className="navbar">
@@ -25,8 +27,12 @@ const Navbar = () => {
             {/* TODO: Add theme toggle button */}
             {/* Button should show sun icon for light mode, moon for dark */}
             {/* onClick should call toggleTheme */}
-            <button className="theme-toggle">
-              🌞
+            <button
+              className="theme-toggle"
+              onClick={toggleTheme}
+              aria-label="Toggle theme"
+            >
+              {theme === 'light' ? '🌞' : '🌙'}
             </button>
 
             <button
